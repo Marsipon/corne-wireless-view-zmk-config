@@ -101,10 +101,10 @@
         symbols {
             display-name = "Symbols";
             bindings = <
-&trans  &trans  &kp AMPERSAND    &kp ASTERISK   &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS                            &mmv MOVE_UP                     &kp LEFT_BRACE    &kp RIGHT_BRACE    &trans     &trans  &trans    &trans
-&trans  &trans  &kp DOLLAR       &kp PERCENT    &kp CARET             &trans                           &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &trans     &trans  &kp BSLH  &kp GRAVE
-&trans  &trans  &kp EXCLAMATION  &kp AT_SIGN    &kp HASH              &trans                 &trans                    &mmv MOVE_DOWN                   &kp MINUS         &kp PLUS           &kp EQUAL  &trans  &kp PIPE  &kp TILDE
-                                 &kp LEFT_META  &trans                &kp SPACE                                                                         &kp BACKSPACE     &trans             &trans
+&trans            &trans  &kp AMPERSAND    &kp ASTERISK   &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS                            &mmv MOVE_UP                     &trans         &kp LEFT_BRACE    &kp RIGHT_BRACE    &trans  &trans    &trans
+&trans            &trans  &kp DOLLAR       &kp PERCENT    &kp CARET             &trans                           &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &trans         &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &trans  &kp BSLH  &kp GRAVE
+&kp LEFT_CONTROL  &trans  &kp EXCLAMATION  &kp AT_SIGN    &kp HASH              &trans                 &trans                    &mmv MOVE_DOWN                   &kp MINUS      &kp PLUS          &kp EQUAL          &trans  &kp PIPE  &kp LS(GRAVE)
+                                           &kp LEFT_META  &trans                &kp SPACE                                                                         &kp BACKSPACE  &trans            &trans
             >;
 
             sensor-bindings = <&scroll_encoder>;
