@@ -35,6 +35,56 @@
             #binding-cells = <0>;
             bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
         };
+
+        HMShiftR: HMShiftR {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HMSHIFTR";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            hold-while-undecided;
+            hold-trigger-key-positions = <0 0 1 2 3 4 5 13 14 15 16 17 18 28 29 30 31 32 33 42 43 44>;
+            hold-trigger-on-release;
+        };
+
+        HMShiftL: HMShiftL {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HMSHIFTL";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            hold-while-undecided;
+            hold-trigger-on-release;
+            hold-trigger-key-positions = <41 7 8 9 10 11 12 22 23 24 25 26 27 36 37 38 39 40 41 45 46 47>;
+        };
+
+        HMR: HMR {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HMR";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            hold-while-undecided;
+            hold-trigger-key-positions = <0 0 1 2 3 4 5 13 14 15 16 17 18 28 29 30 31 32 33 42 43 44>;
+            hold-trigger-on-release;
+            flavor = "tap-preferred";
+        };
+
+        HML: HML {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HML";
+            bindings = <&kp>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            hold-while-undecided;
+            hold-trigger-on-release;
+            hold-trigger-key-positions = <41 7 8 9 10 11 12 22 23 24 25 26 27 36 37 38 39 40 41 45 46 47>;
+            flavor = "tap-preferred";
+        };
     };
 
     rgb_encoder: rgb_encoder {
@@ -66,10 +116,10 @@
         base {
             display-name = "Colemak";
             bindings = <
-&kp TAB  &kp Q            &kp W           &kp F             &kp P               &kp B                               &kp UP                &kp J            &kp L                &kp U              &kp Y            &kp MINUS         &kp SEMICOLON
-&kp ESC  &mt LEFT_META A  &mt LEFT_ALT R  &mt LEFT_SHIFT S  &mt LEFT_CONTROL T  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp M            &mt RIGHT_CONTROL N  &mt RIGHT_SHIFT E  &mt RIGHT_ALT I  &mt RIGHT_META O  &kp SQT
-&trans   &kp Z            &kp X           &kp C             &kp D               &kp V        &kp SPACE              &kp DOWN              &kp K            &kp H                &kp COMMA          &kp DOT          &kp FSLH          &kp ENTER
-                                          &kp LGUI          &mo 1               &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                &kp DELETE
+&kp TAB  &kp Q             &kp W            &kp F                   &kp P                &kp B                               &kp UP                &kp J            &kp L                 &kp U                    &kp Y             &kp MINUS          &kp SEMICOLON
+&kp ESC  &HML LEFT_META A  &HML LEFT_ALT R  &HMShiftL LEFT_SHIFT S  &HML LEFT_CONTROL T  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp M            &HMR RIGHT_CONTROL N  &HMShiftR RIGHT_SHIFT E  &HMR RIGHT_ALT I  &HMR RIGHT_META O  &kp SQT
+&trans   &kp Z             &kp X            &kp C                   &kp D                &kp V        &kp SPACE              &kp DOWN              &kp K            &kp H                 &kp COMMA                &kp DOT           &kp FSLH           &kp ENTER
+                                            &kp LGUI                &mo 1                &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                 &kp DELETE
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
