@@ -109,10 +109,10 @@
         base {
             display-name = "Colemak";
             bindings = <
-&kp TAB  &kp Q            &kp W            &kp F                   &kp P                &kp B                               &kp UP                &kp J            &kp L                 &kp U                    &kp Y            &kp MINUS         &kp SEMICOLON
-&kp ESC  &mt LEFT_META A  &HML LEFT_ALT R  &HMShiftL LEFT_SHIFT S  &HML LEFT_CONTROL T  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp M            &HMR RIGHT_CONTROL N  &HMShiftR RIGHT_SHIFT E  &mt RIGHT_ALT I  &mt RIGHT_META O  &kp SQT
-&trans   &kp Z            &kp X            &kp C                   &kp D                &kp V        &kp SPACE              &kp DOWN              &kp K            &kp H                 &kp COMMA                &kp DOT          &kp FSLH          &kp ENTER
-                                           &kp LGUI                &mo 1                &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                 &kp DELETE
+&kp TAB  &kp Q            &kp W           &kp F                   &kp P                &kp B                               &kp UP                &kp J            &kp L                 &kp U                    &kp Y            &kp MINUS         &kp SEMICOLON
+&kp ESC  &mt LEFT_META A  &mt LEFT_ALT R  &HMShiftL LEFT_SHIFT S  &HML LEFT_CONTROL T  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp M            &HMR RIGHT_CONTROL N  &HMShiftR RIGHT_SHIFT E  &mt RIGHT_ALT I  &mt RIGHT_META O  &kp SQT
+&trans   &kp Z            &kp X           &kp C                   &kp D                &kp V        &kp SPACE              &kp DOWN              &kp K            &kp H                 &kp COMMA                &kp DOT          &kp FSLH          &kp ENTER
+                                          &kp LGUI                &mo 1                &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                 &kp DELETE
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
