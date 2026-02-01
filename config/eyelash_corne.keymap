@@ -109,10 +109,10 @@
         base {
             display-name = "Graphite";
             bindings = <
-&kp TAB  &kp B                    &kp L           &kp D                       &kp W                    &kp Z                               &kp UP                &kp SQT          &kp F                 &kp O                    &kp U                &kp J             &kp QUESTION
-&kp ESC  &mt LEFT_META LC(RC(N))  &mt LEFT_ALT R  &HMShiftL LEFT_SHIFT LC(T)  &HML LEFT_CONTROL LS(S)  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &HMR RIGHT_CONTROL H  &HMShiftR RIGHT_SHIFT A  &mt RIGHT_ALT RS(E)  &mt RIGHT_META I  &kp SEMI
-&trans   &kp Q                    &kp X           &kp M                       &kp C                    &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P                 &kp PERIOD               &kp MINUS            &kp FSLH          &kp ENTER
-                                                  &kp LGUI                    &mo 1                    &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                 &kp DELETE
+&kp TAB  &kp B            &kp L           &kp D                   &kp W                &kp Z                               &kp UP                &kp SQT          &kp F                 &kp O                    &kp U            &kp J             &kp QUESTION
+&kp ESC  &mt LEFT_META N  &mt LEFT_ALT R  &HMShiftL LEFT_SHIFT T  &HML LEFT_CONTROL S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &HMR RIGHT_CONTROL H  &HMShiftR RIGHT_SHIFT A  &mt RIGHT_ALT E  &mt RIGHT_META I  &kp SEMI
+&trans   &kp Q            &kp X           &kp M                   &kp C                &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P                 &kp PERIOD               &kp MINUS        &kp FSLH          &kp ENTER
+                                          &kp LGUI                &mo 1                &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                 &kp DELETE
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
