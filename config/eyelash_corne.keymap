@@ -28,11 +28,13 @@
 
 / {
     behaviors {
-        td0: td0 {
+        td_a_ae: td_a_ae {
             compatible = "zmk,behavior-tap-dance";
             display-name = "Shift/Caps Lock Tap Dance";
             #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+            bindings = <&kp A>, <&kp RA(W)>, <&kp LS(RA(W))>;
+
+            label = "TD_A_AE";
         };
 
         HMShiftR: HMShiftR {
@@ -84,6 +86,24 @@
             hold-trigger-key-positions = <41 7 8 9 10 11 12 22 23 24 25 26 27 36 37 38 39 40 41 45 46 47>;
             flavor = "tap-preferred";
         };
+
+        td_o_o: td_o_o {
+            compatible = "zmk,behavior-tap-dance";
+            display-name = "Shift/Caps Lock Tap Dance";
+            #binding-cells = <0>;
+            bindings = <&kp O>, <&kp RA(O)>, <&kp LS(RA(O))>;
+
+            label = "TD_O_O";
+        };
+
+        td_e_ae: td_e_ae {
+            compatible = "zmk,behavior-tap-dance";
+            display-name = "Shift/Caps Lock Tap Dance";
+            #binding-cells = <0>;
+            bindings = <&kp E>, <&kp RA(A)>, <&kp LS(RA(A))>;
+
+            label = "TD_E_AE";
+        };
     };
 
     scroll_encoder: scroll_encoder {
@@ -109,10 +129,10 @@
         base {
             display-name = "Graphite";
             bindings = <
-&kp TAB               &kp B  &kp L  &kp D     &kp W                   &kp Z                               &kp UP                &kp SQT          &kp F                    &kp O       &kp U      &kp J     &kp SEMI
-&kp ESC               &kp N  &kp R  &kp T     &HMShiftL LEFT_SHIFT S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &HMShiftR RIGHT_SHIFT H  &kp A       &kp E      &kp I     &kp COMMA
-&mt LCTRL LEFT_SHIFT  &kp Q  &kp X  &kp M     &kp C                   &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P                    &kp PERIOD  &kp MINUS  &kp FSLH  &kp ENTER
-                                    &kp LGUI  &mo 1                   &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                    &kp DELETE
+&kp TAB               &kp B  &kp L  &kp D     &kp W                   &kp Z                               &kp UP                &kp SQT          &kp F                    &td_o_o       &kp U      &kp J     &kp SEMI
+&kp ESC               &kp N  &kp R  &kp T     &HMShiftL LEFT_SHIFT S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &HMShiftR RIGHT_SHIFT H  &td_a_ae      &td_e_ae   &kp I     &kp COMMA
+&mt LCTRL LEFT_SHIFT  &kp Q  &kp X  &kp M     &kp C                   &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P                    &kp PERIOD    &kp MINUS  &kp FSLH  &kp ENTER
+                                    &kp LGUI  &mo 1                   &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                    &kp LEFT_ALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
