@@ -32,7 +32,7 @@
             compatible = "zmk,behavior-tap-dance";
             display-name = "Shift/Caps Lock Tap Dance";
             #binding-cells = <0>;
-            bindings = <&kp A>, <&kp RA(W)>, <&kp LS(RA(W))>;
+            bindings = <&HMShiftR RIGHT_SHIFT A>, <&kp RA(W)>;
 
             label = "TD_A_AE";
         };
@@ -91,7 +91,7 @@
             compatible = "zmk,behavior-tap-dance";
             display-name = "Shift/Caps Lock Tap Dance";
             #binding-cells = <0>;
-            bindings = <&kp O>, <&kp RA(O)>, <&kp LS(RA(O))>;
+            bindings = <&kp O>, <&kp RA(O)>;
 
             label = "TD_O_O";
         };
@@ -100,7 +100,7 @@
             compatible = "zmk,behavior-tap-dance";
             display-name = "Shift/Caps Lock Tap Dance";
             #binding-cells = <0>;
-            bindings = <&kp E>, <&kp RA(A)>, <&kp LS(RA(A))>;
+            bindings = <&kp E>, <&kp RA(A)>;
 
             label = "TD_E_AE";
         };
@@ -129,10 +129,10 @@
         base {
             display-name = "Graphite";
             bindings = <
-&kp TAB               &kp B  &kp L  &kp D     &kp W                   &kp Z                               &kp UP                &kp SQT          &kp F                    &td_o_o       &kp U      &kp J     &kp SEMI
-&kp ESC               &kp N  &kp R  &kp T     &HMShiftL LEFT_SHIFT S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &HMShiftR RIGHT_SHIFT H  &td_a_ae      &td_e_ae   &kp I     &kp COMMA
-&mt LCTRL LEFT_SHIFT  &kp Q  &kp X  &kp M     &kp C                   &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P                    &kp PERIOD    &kp MINUS  &kp FSLH  &kp ENTER
-                                    &kp LGUI  &mo 1                   &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                    &kp LEFT_ALT
+&kp TAB               &kp B  &kp L  &kp D                   &kp W  &kp Z                               &kp UP                &kp SQT          &kp F  &td_o_o       &kp U      &kp J     &kp SEMI
+&kp ESC               &kp N  &kp R  &HMShiftL LEFT_SHIFT T  &kp S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &kp H  &td_a_ae      &td_e_ae   &kp I     &kp COMMA
+&mt LCTRL LEFT_SHIFT  &kp Q  &kp X  &kp M                   &kp C  &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P  &kp PERIOD    &kp MINUS  &kp FSLH  &kp ENTER
+                                    &kp LGUI                &mo 1  &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2  &kp LEFT_ALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
@@ -164,8 +164,8 @@
         symbols {
             display-name = "Symbols";
             bindings = <
-&trans            &trans  &kp AMPERSAND    &kp ASTERISK   &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS                            &mmv MOVE_UP                     &trans         &kp LEFT_BRACE    &kp RIGHT_BRACE    &trans  &trans    &trans
-&trans            &trans  &kp DOLLAR       &kp PERCENT    &kp CARET             &trans                           &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &trans         &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &trans  &kp BSLH  &kp GRAVE
+&trans            &trans  &kp AMPERSAND    &kp ASTERISK   &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS                            &mmv MOVE_UP                     &kp GRAVE      &kp LEFT_BRACE    &kp RIGHT_BRACE    &trans  &trans    &trans
+&trans            &trans  &kp DOLLAR       &kp PERCENT    &kp CARET             &trans                           &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &trans         &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &trans  &kp BSLH  &trans
 &kp LEFT_CONTROL  &trans  &kp EXCLAMATION  &kp AT_SIGN    &kp HASH              &trans                 &trans                    &mmv MOVE_DOWN                   &kp MINUS      &kp PLUS          &kp EQUAL          &trans  &kp PIPE  &kp LS(GRAVE)
                                            &kp LEFT_META  &trans                &kp SPACE                                                                         &kp BACKSPACE  &trans            &trans
             >;
