@@ -32,7 +32,7 @@
             compatible = "zmk,behavior-tap-dance";
             display-name = "Shift/Caps Lock Tap Dance";
             #binding-cells = <0>;
-            bindings = <&HMShiftR RIGHT_SHIFT A>, <&kp RA(W)>;
+            bindings = <&kp A>, <&kp RA(W)>;
 
             label = "TD_A_AE";
         };
@@ -135,10 +135,10 @@
         base {
             display-name = "Graphite";
             bindings = <
-&kp TAB               &kp B  &kp L  &kp D                   &kp W  &kp Z                               &kp UP                &kp SQT          &kp F  &td_o_o       &kp U      &kp J     &kp SEMI
-&kp ESC               &kp N  &kp R  &HMShiftL LEFT_SHIFT T  &kp S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &kp H  &td_a_ae      &td_e_ae   &kp I     &kp COMMA
-&mt LCTRL LEFT_SHIFT  &kp Q  &kp X  &kp M                   &kp C  &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P  &kp PERIOD    &kp MINUS  &kp FSLH  &kp ENTER
-                                    &kp LGUI                &mo 1  &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2  &kp LEFT_ALT
+&kp TAB               &kp B  &kp L  &kp D     &kp W                   &kp Z                               &kp UP                &kp SQT          &kp F                    &td_o_o       &kp U      &kp J     &kp SEMI
+&kp ESC               &kp N  &kp R  &kp T     &HMShiftL LEFT_SHIFT S  &kp G                     &kp LEFT  &kp ENTER  &kp RIGHT  &kp Y            &HMShiftR RIGHT_SHIFT H  &td_a_ae      &td_e_ae   &kp I     &kp COMMA
+&mt LCTRL LEFT_SHIFT  &kp Q  &kp X  &kp M     &kp C                   &kp V        &kp SPACE              &kp DOWN              &kp K            &kp P                    &kp PERIOD    &kp MINUS  &kp FSLH  &kp ENTER
+                                    &kp LGUI  &mo 1                   &lt 4 SPACE                                               &lt 3 BACKSPACE  &mo 2                    &kp LEFT_ALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
