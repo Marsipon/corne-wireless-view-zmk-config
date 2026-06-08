@@ -12,9 +12,9 @@
  * Layers
  *   0 BASE      Graphite alphas + home-row mods
  *   1 NAV       arrows / mouse / clipboard
- *   2 NUM       number pad (left hand)        <- hold right-inner thumb
+ *   2 NUM       number pad (left hand)        <- hold right-mid thumb
  *   3 SYM       programming symbols (Swedish) <- hold left-inner thumb
- *   4 FUN       F-keys / bluetooth / reset    <- hold BOTH inner thumbs (NUM+SYM)
+ *   4 FUN       F-keys / bluetooth / reset    <- hold SYM + NUM (left-inner + right-mid)
  *   5 MAC       OS flag, all transparent      <- toggle with &tog 5 on FUN
  *   6 SYMMAC    macOS bracket overrides       <- auto-on when SYM held while MAC active
  *
@@ -76,6 +76,20 @@
             require-prior-idle-ms = <150>;
             hold-trigger-on-release;
             hold-trigger-key-positions = <0 1 2 3 4 5 13 14 15 16 17 18 28 29 30 31 32 33 42 43 44>;
+        };
+
+        // Layer-tap with a sticky modifier on tap: hold = layer, tap = one-shot mod.
+        // Use balanced so holding-and-typing reliably reaches the layer.
+
+        lt_sk: lt_sk {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LT_SK";
+            #binding-cells = <2>;
+            bindings = <&mo>, <&sk>;
+
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <175>;
         };
 
         // Vowel tap-dances: tap = letter, double-tap = Swedish char.
@@ -186,7 +200,7 @@
 &kp TAB    &kp B        &kp L        &kp D         &kp W             &kp Z                             &kp UP                &kp BSLH      &kp F              &td_o_o   &kp U     &kp J        &kp LS(COMMA)
 &kp ESC    &hml LGUI N  &hml LALT R  &hml LCTRL T  &kp S             &kp G                   &kp LEFT  &kp ENTER  &kp RIGHT  &hmr LCTRL Y  &kp H              &td_a_ae  &td_e_ae  &hmr LGUI I  &kp COMMA
 &kp LSHFT  &kp Q        &kp X        &kp M         &kp C             &kp V      &kp SPACE              &kp DOWN              &kp K         &kp P              &kp DOT   &kp FSLH  &kp LS(N7)   &kp ENTER
-                                     &kp ESC       &lt 1 LEFT_SHIFT  &kp SPACE                                               &lt 3 BSPC    &lt 2 RIGHT_SHIFT  &kp RALT
+                                     &kp ESC       &lt_sk 1 LSHFT    &lt 3 SPACE                                             &kp BSPC      &lt_sk 2 RSHFT     &kp RALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
