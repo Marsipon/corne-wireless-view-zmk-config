@@ -217,10 +217,10 @@
         symbols {
             display-name = "Symbols";
             bindings = <
-&trans  &trans  &kp LS(N6)  &kp LS(BSLH)  &kp LS(N8)  &kp LS(N9)                            &mmv MOVE_UP                     &grave    &kp RA(N7)  &kp RA(N0)  &trans  &trans               &trans
-&trans  &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans                &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &trans    &kp RA(N8)  &kp RA(N9)  &trans  &kp RA(MINUS)        &trans
-&trans  &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &trans      &trans                    &mmv MOVE_DOWN                   &kp FSLH  &kp MINUS   &kp LS(N0)  &trans  &kp RA(NON_US_BSLH)  &tilde
-                            &trans        &trans      &trans                                                                 &trans    &trans      &trans
+&trans     &trans  &kp LS(N6)  &kp LS(BSLH)  &kp LS(N8)  &kp LS(N9)                            &mmv MOVE_UP                     &grave         &kp RA(N7)  &kp RA(N0)  &kp NON_US_BSLH  &kp LS(NON_US_BSLH)  &trans
+&trans     &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans                                &mmv MOVE_LEFT       &mkp LCLK       &mmv MOVE_RIGHT  &trans         &kp RA(N8)  &kp RA(N9)  &trans  &kp RA(MINUS)        &trans
+&trans     &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &trans     &trans                     &mmv MOVE_DOWN                   &kp FSLH       &kp MINUS  &kp LS(N0)   &trans  &kp RA(NON_US_BSLH)  &tilde
+                                &trans       &trans      &trans                                                                 &trans         &trans     &trans
             >;
 
             sensor-bindings = <&scroll_encoder>;
