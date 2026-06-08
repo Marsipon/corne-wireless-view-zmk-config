@@ -11,12 +11,14 @@
 /*
  * Layers
  *   0 BASE      Graphite alphas + home-row mods
- *   1 NAV       arrows / mouse / clipboard
- *   2 NUM       number pad (left hand)        <- hold right-mid thumb
- *   3 SYM       programming symbols (Swedish) <- hold left-inner thumb
- *   4 FUN       F-keys / bluetooth / reset    <- hold SYM + NUM (left-inner + right-mid)
- *   5 MAC       OS flag, all transparent      <- toggle with &tog 5 on FUN
- *   6 SYMMAC    macOS bracket overrides       <- auto-on when SYM held while MAC active
+ *   1 QWERTY    QWERTY alphas (alt base)      <- toggle with &tog 1 on FUN
+ *   2 NAV       arrows / mouse / clipboard
+ *   3 NUM       number pad (left hand)        <- hold right-mid thumb
+ *   4 SYM       programming symbols (Swedish) <- hold left-inner thumb
+ *   5 FUN       F-keys / bluetooth / reset    <- hold SYM + NUM (left-inner + right-mid)
+ *   6 MAC       OS flag, all transparent      <- toggle with &tog 6 on FUN
+ *   7 SYMMAC    macOS bracket overrides       <- auto-on when SYM held while MAC active
+ *   8 ACC       a/o/e -> Swedish accents      <- hold left-outer thumb (tap = Esc)
  *
  * OS keyboard layout = Swedish ISO (keep it on both macOS and Windows).
  * The SYM layer emits the Swedish AltGr/Shift combos for programming symbols,
@@ -92,35 +94,16 @@
             quick-tap-ms = <175>;
         };
 
-        // Vowel tap-dances: tap = letter, double-tap = Swedish char.
-        // On a Swedish OS layout: ä = SQT, ö = SEMI, å = LBKT (dedicated keys).
-
-        td_a_ae: td_a_ae {
-            compatible = "zmk,behavior-tap-dance";
-            display-name = "A / Ae";
+        // Tap = ' , Shift = "  (Swedish: ' is BSLH, " is Shift+2)
+        sqt: sqt {
+            compatible = "zmk,behavior-mod-morph";
+            label = "SQT_DQT";
             #binding-cells = <0>;
-            bindings = <&kp A>, <&kp SQT>;
-
-            label = "TD_A_AE";
+            bindings = <&kp BSLH>, <&kp N2>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+            keep-mods = <(MOD_LSFT|MOD_RSFT)>;
         };
 
-        td_o_o: td_o_o {
-            compatible = "zmk,behavior-tap-dance";
-            display-name = "O / Oe";
-            #binding-cells = <0>;
-            bindings = <&kp O>, <&kp SEMI>;
-
-            label = "TD_O_O";
-        };
-
-        td_e_ae: td_e_ae {
-            compatible = "zmk,behavior-tap-dance";
-            display-name = "E / Aa";
-            #binding-cells = <0>;
-            bindings = <&kp E>, <&kp LBKT>;
-
-            label = "TD_E_AE";
-        };
     };
 
     // Dead keys on Swedish: press the dead key, then SPACE, to emit a literal.
@@ -178,16 +161,16 @@
         // Hold both inner thumbs (NUM + SYM) to reach the Functions layer.
 
         functions {
-            if-layers = <2 3>;
-            then-layer = <4>;
+            if-layers = <3 4>;
+            then-layer = <5>;
         };
 
         // When Mac mode (5) is toggled on, holding SYM (3) brings up the
         // macOS bracket overrides (6) on top of the Windows symbol layer.
 
         sym_mac {
-            if-layers = <3 5>;
-            then-layer = <6>;
+            if-layers = <4 6>;
+            then-layer = <7>;
         };
     };
 
@@ -197,10 +180,22 @@
         base {
             display-name = "Graphite";
             bindings = <
-&kp TAB    &kp B        &kp L        &kp D         &kp W             &kp Z                             &kp UP                &kp BSLH      &kp F              &td_o_o   &kp U     &kp J        &kp LS(COMMA)
-&kp ESC    &hml LGUI N  &hml LALT R  &hml LCTRL T  &kp S             &kp G                   &kp LEFT  &kp ENTER  &kp RIGHT  &hmr LCTRL Y  &kp H              &td_a_ae  &td_e_ae  &hmr LGUI I  &kp COMMA
+&kp TAB    &kp B        &kp L        &kp D         &kp W             &kp Z                             &kp UP                &sqt          &kp F              &kp O     &kp U     &kp J        &kp LS(COMMA)
+&kp ESC    &hml LGUI N  &hml LALT R  &hml LCTRL T  &kp S             &kp G                   &kp LEFT  &kp ENTER  &kp RIGHT  &hmr LCTRL Y  &kp H              &kp A     &kp E     &hmr LGUI I  &kp COMMA
 &kp LSHFT  &kp Q        &kp X        &kp M         &kp C             &kp V      &kp SPACE              &kp DOWN              &kp K         &kp P              &kp DOT   &kp FSLH  &kp LS(N7)   &kp ENTER
-                                     &kp ESC       &lt_sk 1 LSHFT    &lt 3 SPACE                                             &kp BSPC      &lt_sk 2 RSHFT     &kp RALT
+                                     &lt 8 ESC     &lt_sk 2 LSHFT    &lt 4 SPACE                                             &kp BSPC      &lt_sk 3 RSHFT     &kp RALT
+            >;
+
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+        };
+
+        qwerty {
+            display-name = "QWERTY";
+            bindings = <
+&kp TAB    &kp Q        &kp W        &kp E         &kp R          &kp T                             &kp UP                &kp Y         &kp U     &kp I      &kp O          &kp P     &kp LBKT
+&kp ESC    &hml LGUI A  &hml LALT S  &hml LCTRL D  &kp F          &kp G                   &kp LEFT  &kp ENTER  &kp RIGHT  &hmr LCTRL H  &kp J     &kp K      &kp L          &hmr LGUI SEMI  &kp SQT
+&kp LSHFT  &kp Z        &kp X        &kp C         &kp V          &kp B      &kp SPACE              &kp DOWN              &kp N         &kp M     &kp COMMA  &kp DOT        &kp FSLH  &kp ENTER
+                                     &lt 8 ESC     &lt_sk 2 LSHFT &lt 4 SPACE                                            &kp BSPC      &lt_sk 3 RSHFT  &kp RALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
@@ -232,8 +227,8 @@
             display-name = "Symbols";
             bindings = <
 &trans     &trans  &kp LS(N6)  &kp LS(BSLH)  &kp LS(N8)  &kp LS(N9)                            &mmv MOVE_UP                     &grave         &kp RA(N7)  &kp RA(N0)  &kp NON_US_BSLH  &kp LS(NON_US_BSLH)  &trans
-&trans     &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans                                &mmv MOVE_LEFT       &mkp LCLK       &mmv MOVE_RIGHT  &trans         &kp RA(N8)  &kp RA(N9)  &trans  &kp RA(MINUS)        &trans
-&trans     &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &trans     &trans                     &mmv MOVE_DOWN                   &kp FSLH       &kp MINUS  &kp LS(N0)   &trans  &kp RA(NON_US_BSLH)  &tilde
+&trans     &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans                                &mmv MOVE_LEFT       &mkp LCLK       &mmv MOVE_RIGHT  &kp LS(MINUS)   &kp RA(N8)  &kp RA(N9)  &sqt  &kp RA(MINUS)        &kp LS(COMMA)
+&trans     &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &trans     &trans                     &mmv MOVE_DOWN                   &kp FSLH       &kp MINUS  &kp LS(N0)   &kp LS(N7)  &kp RA(NON_US_BSLH)  &tilde
                                 &trans       &trans      &trans                                                                 &trans         &trans     &trans
             >;
 
@@ -245,7 +240,7 @@
             bindings = <
 &kp F1          &kp F2        &kp F3        &kp F4        &kp F5        &kp F6                                      &mmv MOVE_UP                     &kp F7       &kp F8     &kp F9       &kp F10     &kp F11          &kp F12
 &bt BT_CLR_ALL  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &bootloader  &mkp LCLK  &mkp MCLK    &mkp RCLK   &kp PRINTSCREEN  &trans
-&studio_unlock  &sys_reset    &tog 5        &trans        &trans        &bt BT_CLR    &kp C_MUTE                    &mmv MOVE_DOWN                   &trans       &trans     &bootloader  &sys_reset  &kp SCROLLLOCK   &kp PAUSE_BREAK
+&studio_unlock  &sys_reset    &tog 6        &tog 1        &trans        &bt BT_CLR    &kp C_MUTE                    &mmv MOVE_DOWN                   &trans       &trans     &bootloader  &sys_reset  &kp SCROLLLOCK   &kp PAUSE_BREAK
                                             &trans        &trans        &trans                                                                       &trans       &trans     &trans
             >;
 
@@ -269,6 +264,16 @@
 &trans  &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans          &trans          &trans  &kp RA(LS(N7))  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans            &trans          &trans  &trans          &trans          &trans  &kp RA(N7)      &trans
                         &trans  &trans  &trans                                    &trans  &trans          &trans
+            >;
+        };
+
+        accents {
+            display-name = "Accents";
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans          &trans  &trans  &kp SEMI  &trans    &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &kp SQT   &kp LBKT  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans            &trans          &trans  &trans  &trans    &trans    &trans  &trans
+                        &trans  &trans  &trans                                    &trans  &trans  &trans
             >;
         };
     };
