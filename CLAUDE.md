@@ -49,13 +49,13 @@ assumed to be Swedish ISO on both macOS and Windows** — that assumption drives
 
 ### Layers (index → name)
 `0` BASE (Graphite) · `1` QWERTY (alt base) · `2` NAV · `3` NUM · `4` SYM · `5` FUN ·
-`6` MAC (flag, all-transparent) · `7` SYMMAC (macOS bracket overrides) · `8` ACC (accents).
+`6` WIN (flag, all-transparent) · `7` SYMWIN (Windows bracket overrides) · `8` ACC (accents).
 
 - **QWERTY** is an *alternate base* deliberately placed at layer 1 — **below** the functional
   layers (2–8) — so `&tog 1` (on FUN) overlays it onto Graphite while NAV/NUM/SYM/etc. still win on
   top. Adding any new alternate base must follow this rule (low index, below functional layers),
   or it will clobber the momentary layers.
-- **FUN** is reached as a conditional layer (hold NUM+SYM); **SYMMAC** is conditional on SYM+MAC.
+- **FUN** is reached as a conditional layer (hold NUM+SYM); **SYMWIN** is conditional on SYM+WIN.
   See the `conditional_layers` node. Renumbering any layer means updating: the `&lt`/`&mo`/`&tog`
   bindings on BASE/QWERTY thumbs and FUN, the `conditional_layers` `if-layers`/`then-layer`, and
   the header comment.
@@ -65,7 +65,7 @@ Positions are absolute indices into the 48-key matrix (0–47), numbered left-to
 first. Rows: `0–12` (13, incl. center UP), `13–27` (15, incl. center LEFT/ENTER/RIGHT), `28–41`
 (14, incl. center SPACE/DOWN), `42–47` thumbs (L-outer, L-mid, L-inner, R-inner, R-mid, R-outer).
 **Any key add/move/reorder must update**: `hml`/`hmr` `hold-trigger-key-positions`, the combo
-`key-positions`, and the SYMMAC overlay (which must line up with the SYM positions it overrides).
+`key-positions`, and the SYMWIN overlay (which must line up with the SYM positions it overrides).
 
 ### Thumbs (BASE and QWERTY share this layout)
 ```
@@ -89,7 +89,7 @@ R-outer  &kp RALT         AltGr
 - **`sqt`** — mod-morph: tap `'`, Shift `"`. Needs BOTH `mods` *and* `keep-mods` (without
   `keep-mods` the morph strips Shift and emits a bare `2`). Lives on BASE pos 7 and SYM pos 25.
 - **`grave` / `tilde` / `caret`** — macros for the Swedish **dead keys** `` ` `` `~` `^`: they send
-  the dead key then SPACE to emit a literal. **Windows behavior; macOS dead-key output is unverified.**
+  the dead key then SPACE to emit a literal. **Verified on both Windows and macOS.**
 - **Accents (layer 8)** — `ä/ö/å` (`SQT`/`SEMI`/`LBKT`) on the BASE `A`/`O`/`E` key positions; hold
   the L-outer thumb. Replaced the old vowel tap-dances (which collided with doubled letters like
   "book"). Meaningful only over Graphite — in QWERTY those keys are different letters (but Swedish
@@ -102,9 +102,9 @@ explicit Swedish combo: e.g. `{` = `RA(N7)`, `[` = `RA(N8)`, `@` = `RA(N2)`, `$`
 `/` = `LS(N7)`, `?` = `LS(MINUS)`, `;` = `LS(COMMA)`, `-` = `FSLH`, `+` = `MINUS`. `<>|` use
 `NON_US_BSLH` (`<` = `NON_US_BSLH`, `>` = `LS(NON_US_BSLH)`, `|` = `RA(NON_US_BSLH)`).
 
-`{ } \ |` differ between Windows and macOS Swedish. SYM holds the **Windows** values; toggling Mac
-mode (`&tog 6` on FUN) activates the **SYMMAC** overlay (layer 7) which overrides only those four
-positions (8, 9, 26, 40) with the macOS combos.
+`{ } \ |` differ between Windows and macOS Swedish. SYM holds the **macOS** values (the default OS);
+toggling Windows mode (`&tog 6` on FUN) activates the **SYMWIN** overlay (layer 7) which overrides
+only those four positions (8, 9, 26, 40) with the Windows combos.
 
 ### SYM layer cheat-sheet (hold L-inner thumb)
 ```

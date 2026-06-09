@@ -16,14 +16,15 @@
  *   3 NUM       number pad (left hand)        <- hold right-mid thumb
  *   4 SYM       programming symbols (Swedish) <- hold left-inner thumb
  *   5 FUN       F-keys / bluetooth / reset    <- hold SYM + NUM (left-inner + right-mid)
- *   6 MAC       OS flag, all transparent      <- toggle with &tog 6 on FUN
- *   7 SYMMAC    macOS bracket overrides       <- auto-on when SYM held while MAC active
+ *   6 WIN       OS flag, all transparent      <- toggle with &tog 6 on FUN
+ *   7 SYMWIN    Windows bracket overrides     <- auto-on when SYM held while WIN active
  *   8 ACC       a/o/e -> Swedish accents      <- hold left-outer thumb (tap = Esc)
  *
  * OS keyboard layout = Swedish ISO (keep it on both macOS and Windows).
  * The SYM layer emits the Swedish AltGr/Shift combos for programming symbols,
  * so no EurKEY is needed. { } \ | differ between Windows and macOS Swedish:
- * the SYMMAC overlay fixes just those four when Mac mode is toggled on.
+ * SYM holds the macOS values by default; the SYMWIN overlay fixes just those
+ * four when Windows mode is toggled on.
  */
 
 &mmv_input_listener { input-processors = <&zip_xy_scaler 2 1>; };
@@ -107,7 +108,7 @@
     };
 
     // Dead keys on Swedish: press the dead key, then SPACE, to emit a literal.
-    // (Windows behavior; on macOS backtick/tilde may need re-testing.)
+    // (Verified on both Windows and macOS.)
 
     macros {
         grave: grave {
@@ -165,10 +166,10 @@
             then-layer = <5>;
         };
 
-        // When Mac mode (5) is toggled on, holding SYM (3) brings up the
-        // macOS bracket overrides (6) on top of the Windows symbol layer.
+        // When Win mode (6) is toggled on, holding SYM (4) brings up the
+        // Windows bracket overrides (7) on top of the macOS-default symbol layer.
 
-        sym_mac {
+        sym_win {
             if-layers = <4 6>;
             then-layer = <7>;
         };
@@ -226,9 +227,9 @@
         symbols {
             display-name = "Symbols";
             bindings = <
-&trans     &trans  &kp LS(N6)  &kp LS(BSLH)  &kp LS(N8)  &kp LS(N9)                            &mmv MOVE_UP                     &grave         &kp RA(N7)  &kp RA(N0)  &kp NON_US_BSLH  &kp LS(NON_US_BSLH)  &trans
-&trans     &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans                                &mmv MOVE_LEFT       &mkp LCLK       &mmv MOVE_RIGHT  &kp LS(MINUS)   &kp RA(N8)  &kp RA(N9)  &sqt  &kp RA(MINUS)        &kp LS(COMMA)
-&trans     &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &trans     &trans                     &mmv MOVE_DOWN                   &kp FSLH       &kp MINUS  &kp LS(N0)   &kp LS(N7)  &kp RA(NON_US_BSLH)  &tilde
+&trans     &trans  &kp LS(N6)  &kp LS(BSLH)  &kp LS(N8)  &kp LS(N9)                            &mmv MOVE_UP                     &grave         &kp RA(LS(N8))  &kp RA(LS(N9))  &kp NON_US_BSLH  &kp LS(NON_US_BSLH)  &trans
+&trans     &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans                                &mmv MOVE_LEFT       &mkp LCLK       &mmv MOVE_RIGHT  &kp LS(MINUS)   &kp RA(N8)  &kp RA(N9)  &sqt  &kp RA(LS(N7))        &kp LS(COMMA)
+&trans     &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &trans     &trans                     &mmv MOVE_DOWN                   &kp FSLH       &kp MINUS  &kp LS(N0)   &kp LS(N7)  &kp RA(N7)  &tilde
                                 &trans       &trans      &trans                                                                 &trans         &trans     &trans
             >;
 
@@ -247,8 +248,8 @@
             sensor-bindings = <&scroll_encoder>;
         };
 
-        macflag {
-            display-name = "MacFlag";
+        winflag {
+            display-name = "WinFlag";
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans          &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
@@ -257,13 +258,13 @@
             >;
         };
 
-        symmac {
-            display-name = "SymMac";
+        symwin {
+            display-name = "SymWin";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans                    &trans          &trans  &kp RA(LS(N8))  &kp RA(LS(N9))  &trans  &trans          &trans
-&trans  &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans          &trans          &trans  &kp RA(LS(N7))  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans            &trans          &trans  &trans          &trans          &trans  &kp RA(N7)      &trans
-                        &trans  &trans  &trans                                    &trans  &trans          &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans          &trans  &kp RA(N7)  &kp RA(N0)  &trans  &trans               &trans
+&trans  &trans  &trans  &trans  &trans  &trans            &trans  &trans  &trans  &trans  &trans      &trans      &trans  &kp RA(MINUS)        &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans            &trans          &trans  &trans      &trans      &trans  &kp RA(NON_US_BSLH)  &trans
+                        &trans  &trans  &trans                                    &trans  &trans      &trans
             >;
         };
 
