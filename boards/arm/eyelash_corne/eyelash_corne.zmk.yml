@@ -8,7 +8,6 @@ features:
   - keys
   - display
   - underglow
-  - encoder
 outputs:
   - usb
   - ble

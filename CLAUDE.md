@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-ZMK firmware configuration for the **Eyelash Corne** — a wireless split Corne keyboard
-(nRF52840 / nice_nano_v2-class halves) with nice_view displays, an EC11 rotary encoder,
-WS2812 RGB underglow, PWM backlight, and mouse/pointing support. There is no application
-source here; this repo customizes upstream ZMK via Devicetree (`.dtsi`/`.dts`/`.keymap`),
+ZMK firmware configuration for the **Eyelash Corne** — a 42-key wireless split Corne keyboard
+(nRF52840 / nice_nano_v2-class halves) with nice_view displays, WS2812 RGB underglow, and PWM
+backlight. The encoder and center D-pad supported by the original board are not populated. There is
+no application source here; this repo customizes upstream ZMK via Devicetree (`.dtsi`/`.dts`/`.keymap`),
 Kconfig (`.conf`/`defconfig`), and a west manifest.
 
 ## Build
@@ -25,16 +25,11 @@ enter the bootloader, copy the `.uf2` to the mass-storage device).
   - To debug over USB serial, uncomment the `zmk-usb-logging` snippet on a board entry.
 - `config/west.yml` pins ZMK at `v0.3.0`. Bumping firmware versions happens here.
 
-## Layout: two keymaps, two roles
+## Keymap
 
-There are **two** `eyelash_corne.keymap` files and the distinction matters:
-
-- **`config/eyelash_corne.keymap`** — the **active** user keymap that ships in the firmware.
-  Base layer is a **Graphite** alpha layout, with a **QWERTY alternate base** on layer 1 reachable
-  by toggle. This is almost always the file to edit.
-- **`boards/arm/eyelash_corne/eyelash_corne.keymap`** — the board's **default/fallback** keymap
-  (a separate QWERTY) that lives with the board definition. Unrelated to the layer-1 QWERTY above;
-  edit only when changing the board's shipped default, not for personal layout changes.
+**`config/eyelash_corne.keymap`** is the active user keymap that ships in the firmware. Its base
+layer is **Graphite**, with a **QWERTY alternate base** on layer 1 reachable by toggle. The unused,
+divergent board fallback keymap was removed so there is only one keymap to maintain.
 
 `zephyr/module.yml` sets `board_root: .`, so the in-repo `boards/arm/eyelash_corne/` *is* the board
 definition.
@@ -59,9 +54,9 @@ assumed to be Swedish ISO on both macOS and Windows** — that assumption drives
   the header comment.
 
 ### Key positions
-Positions are absolute indices into the 48-key matrix (0–47), numbered left-to-right, top row
-first. Rows: `0–12` (13, incl. center UP), `13–27` (15, incl. center LEFT/ENTER/RIGHT), `28–41`
-(14, incl. center SPACE/DOWN), `42–47` thumbs (L-outer, L-mid, L-inner, R-inner, R-mid, R-outer).
+Positions are absolute indices into the 42-key matrix (0–41), numbered left-to-right, top row
+first. Rows: `0–11`, `12–23`, `24–35`, then `36–41` for the thumbs
+(L-outer, L-mid, L-inner, R-inner, R-mid, R-outer).
 **Any key add/move/reorder must update**: `hml`/`hmr` `hold-trigger-key-positions`, the combo
 `key-positions`, and the SYMWIN overlay (which must line up with the SYM positions it overrides).
 
@@ -80,12 +75,12 @@ R-outer  &kp RALT         AltGr
   `hold-trigger-on-release`, positional via opposite-hand `hold-trigger-key-positions`). No
   `hold-while-undecided` (it misfired on rolls). Mods are **GACS minus shift**: GUI/ALT/CTRL on the
   left three home keys, CTRL on the right inner-index, GUI on the right pinky. Shift is *not* on the
-  home row — it lives on the sticky thumbs, plus a plain `&kp LSHFT` on bottom-left (pos 28) for a
+  home row — it lives on the sticky thumbs, plus a plain `&kp LSHFT` on bottom-left (pos 24) for a
   held shift (e.g. CONSTANT_CASE).
 - **`lt_sk`** — layer-tap whose tap is a **sticky** modifier: `bindings = <&mo>, <&sk>`. Used for
   the shift-on-tap / layer-on-hold thumbs. `balanced` so hold-and-type reliably reaches the layer.
 - **`sqt`** — mod-morph: tap `'`, Shift `"`. Needs BOTH `mods` *and* `keep-mods` (without
-  `keep-mods` the morph strips Shift and emits a bare `2`). Lives on BASE pos 7 and SYM pos 25.
+  `keep-mods` the morph strips Shift and emits a bare `2`). Lives on BASE pos 6 and SYM pos 21.
 - **`grave` / `tilde` / `caret`** — macros for the Swedish **dead keys** `` ` `` `~` `^`: they send
   the dead key then SPACE to emit a literal. **Verified on both Windows and macOS.**
 - **Accents (layer 8)** — `ä/ö/å` (`SQT`/`SEMI`/`LBKT`) on the BASE `A`/`O`/`E` key positions; hold
@@ -102,7 +97,7 @@ explicit Swedish combo: e.g. `{` = `RA(N7)`, `[` = `RA(N8)`, `@` = `RA(N2)`, `$`
 
 `{ } \ |` differ between Windows and macOS Swedish. SYM holds the **macOS** values (the default OS);
 holding NUM+SYM and tapping the physical X key toggles Windows mode (`&tog 6` on FUN), activating
-the **SYMWIN** overlay (layer 7), which overrides only those four positions (8, 9, 26, 40) with the
+the **SYMWIN** overlay (layer 7), which overrides only those four positions (7, 8, 22, 34) with the
 Windows combos. Layer toggles are not persistent, so a keyboard reboot returns to macOS mode.
 
 ### SYM layer cheat-sheet (hold L-inner thumb)
@@ -116,20 +111,16 @@ left hand            right hand
 
 ### Other layers / hardware glue
 - **NUM** (hold R-mid): number pad on the left hand (`7 8 9 / 4 5 6 / 1 2 3 / 0`) plus `* = . + : -`.
-- **NAV** (hold L-mid): right-hand arrows, mouse move/click in the center columns,
-  undo/copy/paste/cut, Delete, and Home/End.
-- **Mouse/pointing**: `mmv`/`msc` tuning + input-processor scalers at the top of the file; `&mmv MOVE_*`
-  / `&mkp` / `&msc SCRL_*` bindings live in the center columns of NAV/SYM/FUN.
-- **Encoder** via `sensor-bindings`: volume on the bases, `scroll_encoder` (mouse scroll) elsewhere.
-- **Combo** `softoff` (positions `1 15 29`) → `&soft_off` powers the board down.
+- **NAV** (hold L-mid): right-hand arrows, undo/copy/paste/cut, Delete, and Home/End.
+- **Combo** `softoff` (positions `1 14 25`) → `&soft_off` powers the board down.
 
 ## Hardware definition (`boards/arm/eyelash_corne/`)
 
-- `eyelash_corne.dtsi` — shared hardware: 5×7 GPIO matrix `kscan0` (col2row), `default_transform`
-  (the 14×5 matrix → physical key mapping), EC11 `left_encoder`, WS2812 `led_strip` (21 LEDs on
-  spi3), PWM backlight, battery sensing, flash partitions, nice_view on spi0.
-- `eyelash_corne_left.dts` / `eyelash_corne_right.dts` — per-half overrides. Left enables the
-  encoder; right applies `col-offset = <7>` so the two halves share one column space.
+- `eyelash_corne.dtsi` — shared hardware: 4×7 GPIO matrix `kscan0` (col2row), `default_transform`
+  (the 14×4 matrix → 42-key physical mapping), WS2812 `led_strip` (21 LEDs on spi3), PWM backlight,
+  battery sensing, flash partitions, and nice_view on spi0.
+- `eyelash_corne_left.dts` / `eyelash_corne_right.dts` — per-half definitions. The right half
+  applies `col-offset = <7>` so the halves share one column space.
 - `eyelash_corne-layouts.dtsi` — the ZMK Studio physical layout (key positions/rotation for the
   on-screen editor). Must stay consistent with `default_transform`.
 - `*_defconfig`, `Kconfig.board`, `Kconfig.defconfig`, `board.cmake`, `*.yaml`, `*.zmk.yml` —
@@ -138,8 +129,8 @@ left hand            right hand
 ## Firmware-wide settings (`config/eyelash_corne.conf`)
 
 Kconfig flags applied to all builds: 1-hour idle sleep, RGB underglow (off at start, auto-off on
-idle), NKRO, pointing + smooth scrolling, backlight (40% at start, auto-off on idle), soft-off,
-+8dB BLE TX power, and 8ms debounce. Toggle keyboard-wide features here.
+idle), NKRO, backlight (40% at start, auto-off on idle), soft-off, +8dB BLE TX power, and 8ms
+debounce. Toggle keyboard-wide features here.
 
 `config/eyelash_corne.json` is the ZMK Studio keymap/layout snapshot — generally regenerated by
 Studio rather than hand-edited.
