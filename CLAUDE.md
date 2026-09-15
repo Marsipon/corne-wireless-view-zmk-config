@@ -112,6 +112,7 @@ left hand            right hand
 ### Other layers / hardware glue
 - **NUM** (hold R-mid): number pad on the left hand (`7 8 9 / 4 5 6 / 1 2 3 / 0`) plus `* = . + : -`.
 - **NAV** (hold L-mid): right-hand arrows, undo/copy/paste/cut, Delete, and Home/End.
+- **FUN** has `&ext_power EP_ON` on the second right-hand home-row key as a display/rail recovery key.
 - **Combo** `softoff` (positions `1 14 25`) → `&soft_off` powers the board down.
 
 ## Hardware definition (`boards/arm/eyelash_corne/`)
