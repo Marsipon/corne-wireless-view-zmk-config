@@ -27,9 +27,9 @@ enter the bootloader, copy the `.uf2` to the mass-storage device).
 
 ## Keymap
 
-**`config/eyelash_corne.keymap`** is the active user keymap that ships in the firmware. Its base
-layer is **Graphite**, with a **QWERTY alternate base** on layer 1 reachable by toggle. The unused,
-divergent board fallback keymap was removed so there is only one keymap to maintain.
+**`config/eyelash_corne.keymap`** is the active user keymap that ships in the firmware. Its only
+base layer is **Graphite** (no QWERTY). The unused, divergent board fallback keymap was removed so
+there is only one keymap to maintain.
 
 `zephyr/module.yml` sets `board_root: .`, so the in-repo `boards/arm/eyelash_corne/` *is* the board
 definition.
@@ -41,17 +41,17 @@ assumed to be Swedish ISO on both macOS and Windows** — that assumption drives
 (see below). The file header comment block also documents the layers and thumbs; keep it in sync.
 
 ### Layers (index → name)
-`0` BASE (Graphite) · `1` QWERTY (alt base) · `2` NAV · `3` NUM · `4` SYM · `5` FUN ·
-`6` WIN (flag, all-transparent) · `7` SYMWIN (Windows bracket overrides) · `8` ACC (accents).
+`0` BASE (Graphite) · `1` WIN (flag; swaps home-row Ctrl/GUI) · `2` NAV · `3` NUM · `4` SYM ·
+`5` FUN · `6` SYMWIN (Windows `{ } \ |`) · `7` ACC (accents) · `8` NAVWIN (Windows NAV mods + Ctrl zoom).
 
-- **QWERTY** is an *alternate base* deliberately placed at layer 1 — **below** the functional
-  layers (2–8) — so `&tog 1` (on FUN) overlays it onto Graphite while NAV/NUM/SYM/etc. still win on
-  top. Adding any new alternate base must follow this rule (low index, below functional layers),
-  or it will clobber the momentary layers.
-- **FUN** is reached as a conditional layer (hold NUM+SYM); **SYMWIN** is conditional on SYM+WIN.
-  See the `conditional_layers` node. Renumbering any layer means updating: the `&lt`/`&mo`/`&tog`
-  bindings on BASE/QWERTY thumbs and FUN, the `conditional_layers` `if-layers`/`then-layer`, and
-  the header comment.
+- **WIN must stay at layer 1**, right above BASE. It is not transparent (it overrides home-row
+  positions 13, 15, 20, 22), so any layer *below* it would be hidden at those keys on Windows
+  (this bit us once: SYM showed `n`/`t`/`a`/`i` instead of `+ = )`).
+- **FUN** (NUM+SYM), **SYMWIN** (SYM+WIN) and **NAVWIN** (NAV+WIN) are conditional layers. See the
+  `conditional_layers` node. Renumbering any layer means updating: the `&lt_bal`/`&mo`/`&tog`
+  bindings on BASE and FUN, the `conditional_layers` `if-layers`/`then-layer`, and the header comment.
+- The WIN overrides keep the shortcut modifier on the middle finger (Cmd on macOS = `T`/`A`; Ctrl on
+  Windows = `T`/`A`).
 
 ### Key positions
 Positions are absolute indices into the 42-key matrix (0–41), numbered left-to-right, top row
@@ -60,33 +60,32 @@ first. Rows: `0–11`, `12–23`, `24–35`, then `36–41` for the thumbs
 **Any key add/move/reorder must update**: `hml`/`hmr` `hold-trigger-key-positions`, the combo
 `key-positions`, and the SYMWIN overlay (which must line up with the SYM positions it overrides).
 
-### Thumbs (BASE and QWERTY share this layout)
+### Thumbs
 ```
-L-outer  &lt 8 ESC        tap Esc      / hold ACC (accents)
-L-mid    &lt_sk 2 LSHFT   tap ⇧(sticky)/ hold NAV
-L-inner  &lt 4 SPACE      tap Space    / hold SYM
+L-outer  &lt_bal 7 ESC     tap Esc      / hold ACC (accents)
+L-mid    &mo 2             hold NAV
+L-inner  &lt_bal 4 SPACE   tap Space    / hold SYM
 R-inner  &kp BSPC
-R-mid    &lt_sk 3 RSHFT   tap ⇧(sticky)/ hold NUM
-R-outer  &kp RALT         AltGr
+R-mid    &mo 3             hold NUM
+R-outer  &kp ENTER
 ```
 
 ### Custom behaviors
 - **`hml` / `hmr`** — home-row mods (hold-tap, `balanced`, 280ms, `require-prior-idle-ms 150`,
   `hold-trigger-on-release`, positional via opposite-hand `hold-trigger-key-positions`). No
-  `hold-while-undecided` (it misfired on rolls). Mods are **GACS minus shift**: GUI/ALT/CTRL on the
-  left three home keys, CTRL on the right inner-index, GUI on the right pinky. Shift is *not* on the
-  home row — it lives on the sticky thumbs, plus a plain `&kp LSHFT` on bottom-left (pos 24) for a
-  held shift (e.g. CONSTANT_CASE).
-- **`lt_sk`** — layer-tap whose tap is a **sticky** modifier: `bindings = <&mo>, <&sk>`. Used for
-  the shift-on-tap / layer-on-hold thumbs. `balanced` so hold-and-type reliably reaches the layer.
+  `hold-while-undecided` (it misfired on rolls). Full set on both hands, macOS mapping: left
+  `N R T S` = Ctrl Alt Cmd Shift, right `H A E I` = Shift Cmd Alt Ctrl. Windows (layer 1) swaps
+  Ctrl/GUI on N/T/A/I. Shift lives on the index home keys; pos 24 is `&caps_word` (its
+  `continue-list` keeps it alive through the Swedish `_`). No sticky shift anywhere.
+- **`lt_bal`** — layer-tap, `balanced` (`<&mo>, <&kp>`). Used for the Space/SYM and Esc/ACC thumbs;
+  the default `&lt` is tap-preferred and sent Space+letter when a symbol was pressed quickly.
 - **`sqt`** — mod-morph: tap `'`, Shift `"`. Needs BOTH `mods` *and* `keep-mods` (without
-  `keep-mods` the morph strips Shift and emits a bare `2`). Lives on BASE pos 6 and SYM pos 21.
+  `keep-mods` the morph strips Shift and emits a bare `2`). Lives on BASE pos 6 and SYM pos 18.
 - **`grave` / `tilde` / `caret`** — macros for the Swedish **dead keys** `` ` `` `~` `^`: they send
   the dead key then SPACE to emit a literal. **Verified on both Windows and macOS.**
-- **Accents (layer 8)** — `ä/ö/å` (`SQT`/`SEMI`/`LBKT`) on the BASE `A`/`O`/`E` key positions; hold
-  the L-outer thumb. Replaced the old vowel tap-dances (which collided with doubled letters like
-  "book"). Meaningful only over Graphite — in QWERTY those keys are different letters (but Swedish
-  QWERTY has dedicated `å ä ö` anyway).
+- **Accents (layer 7)** — `ä/ö/å` (`SQT`/`SEMI`/`LBKT`) on the BASE `A`/`O`/`E` key positions (20, 8,
+  21); hold the L-outer thumb. Replaced the old vowel tap-dances (which collided with doubled
+  letters like "book").
 
 ### Swedish symbols — IMPORTANT
 Because the OS layout is Swedish, **do not use the named US symbol keycodes** (`AMPS`, `LBRC`,
@@ -96,22 +95,27 @@ explicit Swedish combo: e.g. `{` = `RA(N7)`, `[` = `RA(N8)`, `@` = `RA(N2)`, `$`
 `NON_US_BSLH` (`<` = `NON_US_BSLH`, `>` = `LS(NON_US_BSLH)`, `|` = `RA(NON_US_BSLH)`).
 
 `{ } \ |` differ between Windows and macOS Swedish. SYM holds the **macOS** values (the default OS);
-holding NUM+SYM and tapping the physical X key toggles Windows mode (`&tog 6` on FUN), activating
-the **SYMWIN** overlay (layer 7), which overrides only those four positions (7, 8, 22, 34) with the
-Windows combos. Layer toggles are not persistent, so a keyboard reboot returns to macOS mode.
+holding NUM+SYM and tapping the physical X key toggles Windows mode (`&tog 1` on FUN), activating
+the **WIN** flag, which turns on **SYMWIN** (layer 6, overrides `\ { } |` at positions 30–33) and
+**NAVWIN**. Layer toggles are not persistent, so a keyboard reboot returns to macOS mode.
 
 ### SYM layer cheat-sheet (hold L-inner thumb)
 ```
-left hand            right hand
- &  *  (  )           `  {  }  <  >  :
- $  %  ^              ?  [  ]  '"  \  ;
- !  @  #  _          -  +  =  /  |  ~
+left (pinky→inner)        right (inner→pinky, outer)
+ !  &  ?  ~  ^             `  [  ]  <  >  :
+ +  -  =  *  /             '" (  )
+ #  $  %  @  _             \  {  }  |
 ```
-`'"` is the `sqt` morph (tap `'`, Shift `"`). `` ` `` `~` `^` are the dead-key macros.
+`'"` is the `sqt` morph. `` ` `` `~` `^` are dead-key macros. `\ { } |` are the macOS values; the
+SYMWIN overlay replaces them on Windows.
 
 ### Other layers / hardware glue
 - **NUM** (hold R-mid): number pad on the left hand (`7 8 9 / 4 5 6 / 1 2 3 / 0`) plus `* = . + : -`.
-- **NAV** (hold L-mid): right-hand arrows, undo/copy/paste/cut, Delete, and Home/End.
+- **NAV** (hold L-mid): vim-style arrows on the right home row (`← ↓ ↑ →` index→pinky),
+  Home/End/PgUp/PgDn, Delete, and zoom in/reset/out stacked in the
+  inner column (Cmd on macOS, Ctrl via NAVWIN). The left home row has plain instant mods
+  (macOS: Ctrl Alt Cmd Shift; Windows: GUI Alt Ctrl Shift) for Shift/Ctrl+arrow selection.
+  Copy/paste/undo are ordinary chords: hold the home-row Cmd/Ctrl (`A` or `T`) + `C`/`V`/`X`/`Z`.
 - **FUN** has `&ext_power EP_ON` on the second right-hand home-row key as a display/rail recovery key.
 - **Combo** `softoff` (positions `1 14 25`) → `&soft_off` powers the board down.
 

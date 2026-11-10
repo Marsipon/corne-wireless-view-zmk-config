@@ -6,16 +6,20 @@
 #include <dt-bindings/zmk/rgb.h>
 
 /*
- * Layers
- *   0 BASE      Graphite alphas + home-row mods
- *   1 QWERTY    QWERTY alphas (alt base)      <- toggle with &tog 1 on FUN
- *   2 NAV       arrows / editing / clipboard
- *   3 NUM       number pad (left hand)        <- hold right-mid thumb
- *   4 SYM       programming symbols (Swedish) <- hold left-inner thumb
- *   5 FUN       F-keys / bluetooth / reset    <- hold SYM + NUM (left-inner + right-mid)
- *   6 WIN       OS flag, all transparent      <- toggle with &tog 6 on FUN
- *   7 SYMWIN    Windows bracket overrides     <- auto-on when SYM held while WIN active
- *   8 ACC       a/o/e -> Swedish accents      <- hold left-outer thumb (tap = Esc)
+ * Layers (WIN must stay at 1: it sits right above BASE so every other layer overrides it)
+ *   0 BASE      Graphite alphas + home-row mods (macOS mods by default)
+ *   1 WIN       Windows flag: swaps Ctrl/GUI home-row mods  <- toggle with &tog 1 on FUN
+ *   2 NAV       vim-style arrows (<- v ^ ->) / Home End PgUp PgDn / zoom  <- hold left-mid thumb
+ *   3 NUM       number pad (left hand)               <- hold right-mid thumb
+ *   4 SYM       programming symbols (Swedish)        <- hold left-inner thumb (Space)
+ *   5 FUN       F-keys / bluetooth / reset           <- hold NUM + SYM
+ *   6 SYMWIN    Windows { } \ | overrides            <- auto-on when SYM + WIN
+ *   7 ACC       a/o/e -> Swedish a-ring/a-uml/o-uml  <- hold left-outer thumb (tap = Esc)
+ *   8 NAVWIN    Windows NAV mods + Ctrl zoom         <- auto-on when NAV + WIN
+ *
+ * Thumbs:  L: Esc/ACC  NAV  Space/SYM      R: Backspace  NUM  Enter
+ * Home row mods (macOS): left N R T S = Ctrl Alt Cmd Shift, right H A E I = Shift Cmd Alt Ctrl.
+ * Windows swaps Ctrl<->GUI so the shortcut modifier stays on the middle finger (T / A).
  *
  * OS keyboard layout = Swedish ISO (keep it on both macOS and Windows).
  * macOS is the default; hold NUM+SYM and tap the physical X key to toggle Windows mode.
@@ -27,6 +31,9 @@
  */
 
 &soft_off { hold-time-ms = <2000>; };
+
+// Keep Caps Word alive through the Swedish underscore (Shift+'-' key) for snake_case.
+&caps_word { continue-list = <LS(FSLH) BACKSPACE DELETE>; };
 
 / {
     behaviors {
@@ -64,14 +71,15 @@
             hold-trigger-key-positions = <0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38>;
         };
 
-        // Layer-tap with a sticky modifier on tap: hold = layer, tap = one-shot mod.
-        // Use balanced so holding-and-typing reliably reaches the layer.
+        // Layer-tap for the Space/Esc thumbs: hold = layer, tap = key.
+        // Balanced (not the default tap-preferred) so a symbol pressed right after the
+        // thumb reaches the layer instead of sending Space/Esc plus a plain letter.
 
-        lt_sk: lt_sk {
+        lt_bal: lt_bal {
             compatible = "zmk,behavior-hold-tap";
-            label = "LT_SK";
+            label = "LT_BAL";
             #binding-cells = <2>;
-            bindings = <&mo>, <&sk>;
+            bindings = <&mo>, <&kp>;
 
             flavor = "balanced";
             tapping-term-ms = <200>;
@@ -141,12 +149,19 @@
             then-layer = <5>;
         };
 
-        // When Win mode (6) is toggled on, holding SYM (4) brings up the
-        // Windows bracket overrides (7) on top of the macOS-default symbol layer.
+        // When Win mode (1) is toggled on, holding SYM (4) brings up the
+        // Windows bracket overrides (6) on top of the macOS-default symbol layer.
 
         sym_win {
-            if-layers = <4 6>;
-            then-layer = <7>;
+            if-layers = <4 1>;
+            then-layer = <6>;
+        };
+
+        // Same for NAV (2): Windows uses Ctrl for zoom and has Ctrl on the middle finger.
+
+        nav_win {
+            if-layers = <2 1>;
+            then-layer = <8>;
         };
     };
 
@@ -156,30 +171,30 @@
         base {
             display-name = "Graphite";
             bindings = <
-&kp TAB    &kp B        &kp L        &kp D         &kp W             &kp Z       &sqt          &kp F              &kp O     &kp U     &kp J        &kp LS(COMMA)
-&kp ESC    &hml LGUI N  &hml LALT R  &hml LCTRL T  &kp S             &kp G       &hmr LCTRL Y  &kp H              &kp A     &kp E     &hmr LGUI I  &kp COMMA
-&kp LSHFT  &kp Q        &kp X        &kp M         &kp C             &kp V       &kp K         &kp P              &kp DOT   &kp FSLH  &kp LS(N7)   &kp ENTER
-                                     &lt 8 ESC     &lt_sk 2 LSHFT    &lt 4 SPACE  &kp BSPC      &lt_sk 3 RSHFT     &kp RALT
+&kp TAB     &kp B         &kp L        &kp D        &kp W         &kp Z  &sqt   &kp F         &kp O        &kp U        &kp J         &kp LS(COMMA)
+&kp ESC     &hml LCTRL N  &hml LALT R  &hml LGUI T  &hml LSHFT S  &kp G  &kp Y  &hmr LSHFT H  &hmr LGUI A  &hmr LALT E  &hmr LCTRL I  &kp COMMA
+&caps_word  &kp Q         &kp X        &kp M        &kp C         &kp V  &kp K  &kp P         &kp DOT      &kp FSLH     &kp LS(N7)    &kp DEL
+                                       &lt_bal 7 ESC  &mo 2         &lt_bal 4 SPACE  &kp BSPC  &mo 3         &kp ENTER
             >;
         };
 
-        qwerty {
-            display-name = "QWERTY";
+        winflag {
+            display-name = "Windows";
             bindings = <
-&kp TAB    &kp Q        &kp W        &kp E         &kp R          &kp T      &kp Y         &kp U     &kp I      &kp O          &kp P     &kp LBKT
-&kp ESC    &hml LGUI A  &hml LALT S  &hml LCTRL D  &kp F          &kp G      &hmr LCTRL H  &kp J     &kp K      &kp L          &hmr LGUI SEMI  &kp SQT
-&kp LSHFT  &kp Z        &kp X        &kp C         &kp V          &kp B      &kp N         &kp M     &kp COMMA  &kp DOT        &kp FSLH  &kp ENTER
-                                     &lt 8 ESC     &lt_sk 2 LSHFT &lt 4 SPACE  &kp BSPC      &lt_sk 3 RSHFT  &kp RALT
+&trans  &trans       &trans  &trans        &trans  &trans  &trans  &trans  &trans        &trans  &trans       &trans
+&trans  &hml LGUI N  &trans  &hml LCTRL T  &trans  &trans  &trans  &trans  &hmr LCTRL A  &trans  &hmr LGUI I  &trans
+&trans  &trans       &trans  &trans        &trans  &trans  &trans  &trans  &trans        &trans  &trans       &trans
+                             &trans        &trans  &trans  &trans  &trans  &trans
             >;
         };
 
         navigation {
             display-name = "Nav";
             bindings = <
-&trans  &trans         &trans        &trans          &trans            &trans  &trans         &trans          &kp FSLH        &kp MINUS     &trans           &kp BSPC
-&trans  &kp LEFT_META  &kp LEFT_ALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans  &trans         &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT_ARROW  &kp HOME
-&trans  &trans         &trans        &trans          &trans            &trans  &kp C_AC_UNDO  &kp C_AC_COPY   &kp C_AC_PASTE  &kp C_AC_CUT  &kp DELETE       &kp END
-                                     &kp LEFT_META   &trans            &trans  &kp BACKSPACE  &trans          &trans
+&trans  &trans     &trans    &trans    &trans     &trans  &kp LG(MINUS)  &trans          &trans          &trans           &trans     &kp DELETE
+&trans  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &trans  &kp LG(N0)     &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW     &kp RIGHT_ARROW  &kp HOME
+&trans  &trans     &trans    &trans    &trans     &trans  &kp LG(FSLH)   &kp PG_UP       &kp PG_DN       &trans           &trans     &kp END
+                             &trans    &trans     &trans  &trans         &trans          &trans
             >;
         };
 
@@ -189,47 +204,37 @@
 &trans  &kp LS(BSLH)  &kp N7  &kp N8  &kp N9  &kp MINUS    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &kp LS(N0)    &kp N4  &kp N5  &kp N6  &kp LS(DOT)  &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &kp DOT       &kp N1  &kp N2  &kp N3  &kp FSLH     &trans  &trans  &trans  &trans  &trans  &trans
-                        &trans  &kp N0  &trans                &trans  &trans  &trans
+                              &trans  &kp N0  &trans       &trans  &trans  &trans
             >;
         };
 
         symbols {
             display-name = "Symbols";
             bindings = <
-&trans  &trans  &kp LS(N6)  &kp LS(BSLH)  &kp LS(N8)  &kp LS(N9)    &grave         &kp RA(LS(N8))  &kp RA(LS(N9))  &kp NON_US_BSLH  &kp LS(NON_US_BSLH)  &kp LS(DOT)
-&trans  &trans  &kp RA(N4)  &kp LS(N5)    &caret      &trans        &kp LS(MINUS)  &kp RA(N8)      &kp RA(N9)      &sqt              &kp RA(LS(N7))        &kp LS(COMMA)
-&trans  &trans  &kp LS(N1)  &kp RA(N2)    &kp LS(N3)  &kp LS(FSLH)  &kp FSLH       &kp MINUS       &kp LS(N0)      &kp LS(N7)        &kp RA(N7)            &tilde
-                                &trans       &trans      &trans        &trans         &trans          &trans
+&trans  &kp LS(N1)  &kp LS(N6)  &kp LS(MINUS)  &tilde        &caret        &grave          &kp RA(N8)      &kp RA(N9)      &kp NON_US_BSLH  &kp LS(NON_US_BSLH)  &kp LS(DOT)
+&trans  &kp MINUS   &kp FSLH    &kp LS(N0)     &kp LS(BSLH)  &kp LS(N7)    &sqt            &kp LS(N8)      &kp LS(N9)      &trans           &trans               &trans
+&trans  &kp LS(N3)  &kp RA(N4)  &kp LS(N5)     &kp RA(N2)    &kp LS(FSLH)  &kp RA(LS(N7))  &kp RA(LS(N8))  &kp RA(LS(N9))  &kp RA(N7)       &trans               &trans
+                                &trans         &trans        &trans        &trans          &trans          &trans
             >;
         };
 
         functions {
             display-name = "Functions";
             bindings = <
-&kp F1           &kp F2        &kp F3  &kp F4  &kp F5      &kp F6        &kp F7       &kp F8     &kp F9       &kp F10     &kp F11          &kp F12
-&bt BT_CLR_ALL   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &bootloader  &ext_power EP_ON  &trans  &trans  &kp PRINTSCREEN  &trans
-&rgb_ug RGB_TOG  &sys_reset    &tog 6  &tog 1  &bl BL_TOG  &bt BT_CLR    &trans       &trans     &bootloader  &sys_reset  &kp SCROLLLOCK   &kp PAUSE_BREAK
-                                           &trans  &trans  &trans        &trans       &trans     &trans
-            >;
-        };
-
-        winflag {
-            display-name = "Windows";
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-                        &trans  &trans  &trans  &trans  &trans  &trans
+&kp F1           &kp F2        &kp F3        &kp F4        &kp F5        &kp F6        &kp F7       &kp F8            &kp F9       &kp F10     &kp F11          &kp F12
+&bt BT_CLR_ALL   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &bootloader  &ext_power EP_ON  &trans       &trans      &kp PRINTSCREEN  &trans
+&rgb_ug RGB_TOG  &sys_reset    &tog 1        &trans        &bl BL_TOG    &bt BT_CLR    &trans       &trans            &bootloader  &sys_reset  &kp SCROLLLOCK   &kp PAUSE_BREAK
+                                             &trans        &trans        &trans        &trans       &trans            &trans
             >;
         };
 
         symwin {
             display-name = "SymWin";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp RA(N7)  &kp RA(N0)  &trans  &trans               &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans      &trans      &trans  &kp RA(MINUS)        &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans      &trans      &trans  &kp RA(NON_US_BSLH)  &trans
-                        &trans  &trans  &trans  &trans  &trans      &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans      &trans      &trans               &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans      &trans      &trans               &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &kp RA(MINUS)  &kp RA(N7)  &kp RA(N0)  &kp RA(NON_US_BSLH)  &trans  &trans
+                        &trans  &trans  &trans  &trans         &trans      &trans
             >;
         };
 
@@ -237,9 +242,19 @@
             display-name = "Accents";
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp SEMI  &trans    &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp SQT   &kp LBKT  &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans    &trans
-                        &trans  &trans  &trans  &trans  &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp SQT   &kp LBKT  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans    &trans  &trans
+                        &trans  &trans  &trans  &trans  &trans  &trans
+            >;
+        };
+
+        navwin {
+            display-name = "NavWin";
+            bindings = <
+&trans  &trans    &trans  &trans     &trans  &trans  &kp LC(MINUS)  &trans  &trans  &trans  &trans  &trans
+&trans  &kp LGUI  &trans  &kp LCTRL  &trans  &trans  &kp LC(N0)     &trans  &trans  &trans  &trans  &trans
+&trans  &trans    &trans  &trans     &trans  &trans  &kp LC(FSLH)   &trans  &trans  &trans  &trans  &trans
+                          &trans     &trans  &trans  &trans         &trans  &trans
             >;
         };
     };
