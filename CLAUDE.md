@@ -66,12 +66,12 @@ L-outer  &lt_bal 7 ESC     tap Esc      / hold ACC (accents)
 L-mid    &mo 2             hold NAV
 L-inner  &lt_bal 4 SPACE   tap Space    / hold SYM
 R-inner  &kp BSPC
-R-mid    &mo 3             hold NUM
-R-outer  &kp ENTER
+R-mid    &kp RSHFT         plain held Shift (instant, no hold-tap)
+R-outer  &mo 3             hold NUM
 ```
 
 ### Custom behaviors
-- **`hml` / `hmr`** — home-row mods (hold-tap, `balanced`, 280ms, `require-prior-idle-ms 150`,
+- **`hml` / `hmr`** — home-row mods (hold-tap, `balanced`, 280ms, `require-prior-idle-ms 100`,
   `hold-trigger-on-release`, positional via opposite-hand `hold-trigger-key-positions`). No
   `hold-while-undecided` (it misfired on rolls). Full set on both hands, macOS mapping: left
   `N R T S` = Ctrl Alt Cmd Shift, right `H A E I` = Shift Cmd Alt Ctrl. Windows (layer 1) swaps
@@ -103,14 +103,14 @@ the **WIN** flag, which turns on **SYMWIN** (layer 6, overrides `\ { } |` at pos
 ```
 left (pinky→inner)        right (inner→pinky, outer)
  !  &  ?  ~  ^             `  [  ]  <  >  :
- +  -  =  *  /             '" (  )
+ +  -  =  *  /             '" (  )  "
  #  $  %  @  _             \  {  }  |
 ```
 `'"` is the `sqt` morph. `` ` `` `~` `^` are dead-key macros. `\ { } |` are the macOS values; the
 SYMWIN overlay replaces them on Windows.
 
 ### Other layers / hardware glue
-- **NUM** (hold R-mid): number pad on the left hand (`7 8 9 / 4 5 6 / 1 2 3 / 0`) plus `* = . + : -`.
+- **NUM** (hold R-outer): number pad on the left hand (`7 8 9 / 4 5 6 / 1 2 3 / 0`) plus `* = . + : -`.
 - **NAV** (hold L-mid): vim-style arrows on the right home row (`← ↓ ↑ →` index→pinky),
   Home/End/PgUp/PgDn, Delete, and zoom in/reset/out stacked in the
   inner column (Cmd on macOS, Ctrl via NAVWIN). The left home row has plain instant mods
